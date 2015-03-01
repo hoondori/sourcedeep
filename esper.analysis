@@ -1,0 +1,76 @@
+
+
+
+
+Adapter package
+- Adapter API
+-- Most abstract class that defines the fundamental behaviors of adaption such as start/stop/resume/pause of data transmission into or out of engine instance
+- InputAdapter APUI
+-- ???
+- OutputAdator API
+-- management of subscription for sending occured events to the exteriors
+- AdapterSPI API
+-- engine instance is related to the Adapter through this API 
+- AdapterState Enumeration
+-- state of Adapter such as opened/stoped/paused/destroyed
+- AdapterStateManager
+-- examines on validitity of state transition from x to y. If erraneous state transition occurs, then throws an exception
+- Subscription API
+-- associated with specific output adapter (M by 1). Defines which type of event is expected to be received from output adapter
+-- BaseSubscription
+--- Implementation of subscription API
+---- [TODO]
+
+
+EPServiceProvider
+
+Client->Configruation handling
+----------------------------------------------------
+Configuration
+- set of event type name and its corresponding class
+-- each event type has property map
+- set of class and package name for partial class resolution
+- list of other things such as
+-- database references
+-- plugin for view/aggregation/...
+- configurationEngineDefaults
+ConfigurationEngineDefaults
+- logging
+Configuration Parser
+- extract configuration values from xml-formatted external file
+- supports several types of container such as xml-dom, java-util-map, objectarray, legacy-typejava-util-map, objectarray, legacy-type
+Configuration Factory
+
+Client->Query/Statement/Result
+---------------------------------------------------
+EPStatement
+- not fire-and-forget query
+- consists of text for expressing statement including annotations, and statement name itself
+- three states : Started/Stopped/Destroyed
+- statement type : pattern or not
+- only single subscriber can receive the matching results for this statement
+- can have state change listeners
+- [TODO] context partition selector
+EPPreparedStatement
+- precompiled form of statement that is with substitution parameters
+EPOndemandPreparedQuery
+- fire-and-forget query
+EPOndemandPreparedQueryResult
+
+
+Client->ServiceProvider
+---------------------------------------------------
+EPRuntime
+- (1) send events such as single object, array of object, map-typed, dom-typed
+- (2) [TODO] route events
+- (3) execute query
+EPAdministrator
+- create and start EPL/Pattern statements
+
+
+
+EPServiceProvider
+- container of EPRuntime/EPAdministrator...
+
+
+
