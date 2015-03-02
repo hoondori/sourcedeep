@@ -47,7 +47,7 @@ EPStatement
 - not fire-and-forget query
 - consists of text for expressing statement including annotations, and statement name itself
 - three states : Started/Stopped/Destroyed
-- statement type : pattern or not
+- [TODO] statement type : pattern or not
 - only single subscriber can receive the matching results for this statement
 - can have state change listeners
 - [TODO] context partition selector
@@ -56,6 +56,9 @@ EPPreparedStatement
 EPOndemandPreparedQuery
 - fire-and-forget query
 EPOndemandPreparedQueryResult
+- resut of fire-and-forget query
+EPOndemanPreparedQueryParameterized
+- precompiled fire-and-forget query with substitution parameters
 
 
 Client->ServiceProvider
@@ -66,11 +69,77 @@ EPRuntime
 - (3) execute query
 EPAdministrator
 - create and start EPL/Pattern statements
-
-
-
-EPServiceProvider
+EPServiceProviderSPI<-EPServiceProvider
 - container of EPRuntime/EPAdministrator...
+EPServiceProviderManager 
+- manage a pool of EPServiceProvider, guiding to reused existing provider when requested
+EPServiceProviderIsolated
+- [TODO] some kind of subset of EPServiceProvider API
+
+
+Client->Event
+---------------------------------------------------
+EventBean
+- All events have some kind of wrapper through which some queries are executed such as identifying event type, underlying object, values of properties
+EvenBeanFactory
+- a factory for wrapping given java object into event instance
+EventType
+- an interface for querying Map-like structure of the event. immutable operations only. 
+FragmentEventType
+- fragment is a event instance itself which is embedded in another event instance. it expresses kind of nested structure
+EventPropertyGetter
+- a special API(?) for the situation that given an event instance(i.e. event bean) queries are executed
+EventPropertyDescriptor
+- a detailed description of a propery of an event instance, describing property name/class/type
+- a type can be one of the following : index(array), map, fragment
+EventSender
+
+
+Client->Listener
+---------------------------------------------------
+StateAwareUpdateListener
+- notify such that, by results of executing a statement, new events are created, and old events are removed
+UpdateListener
+- much as like StatementAwareUpdateListener, except that the listener does not know by which statement the changes have been made
+EPServiceStateListener
+- state changing listener for regarding that of EPServiceProvider
+EPStatementStateListener
+- state changing listener for regarding that of EPStatement
+
+
+Type
+---------------------------------------------------
+Overally, there are four categories of classes, ~Enum, ~Value, ~Parameter, ~stringhanlding..
+Enum category
+- dealing with numeric/logical operations between values
+- BitwiseOpEnum
+-- for the given bitwise computing expression(ex. a & b, a || b), provide ways of computing these, coercely convert java objects to java primitives, then compute it
+- CronOperatorEnum
+- MathArithTypeEnum
+- MinMaxTypeEnum 
+- OuterJoinEnum
+- RelationalOpEnum
+Value catetory
+- BooleanValue/ByteValue/IntValue/LongValue/ShortValue/FloatValue/DoubleValue
+-- a placehoder for the primitives in event expression
+-- provide ways of parsing primitive types out of given string
+Parameter category
+- NumberSetParameter
+-- standard API for dealing with set of value types,
+-- provide ways of generating in-between values such as range
+- RangeParameter
+-- a representation of range(i.e min.max), also implementing NumbersetParameter interface
+- WildcardParamenter
+-- a representation of wildcard range(ex. */{1-2}), also implementing NumbersetParameter interface
+String Hanlding category
+- 
+
+
+
+
+
+
+
 
 
 
